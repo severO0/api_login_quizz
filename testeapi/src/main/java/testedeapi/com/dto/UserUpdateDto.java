@@ -1,7 +1,7 @@
 package testedeapi.com.dto;
 
 
-public record UserDto(
+public record UserUpdateDto(
     String nome,
     String email, 
     String registroAcademico,

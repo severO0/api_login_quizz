@@ -1,14 +1,12 @@
 package testedeapi.com.models;
 import org.hibernate.annotations.ColumnDefault;
-import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,17 +37,16 @@ public class UserModel {
     @Column(name="registroAcademico", unique = true, nullable = false, length = 21)
     private String registroAcademico;
     
-    //UTILIZAR O SPRING SECURITY PARA UTILIZAR O BCRypt
     @Column(name = "senha", nullable = false, length = 60)
     private String senha;
 
     @Column(name="ativo", nullable = false, length = 1)
     @ColumnDefault("true")
     private Boolean ativo;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;  
     
-    @PrePersist
-    private void encryptPassword() {
-    this.senha = new BCryptPasswordEncoder().encode(this.senha);
     }
     
-}
+
