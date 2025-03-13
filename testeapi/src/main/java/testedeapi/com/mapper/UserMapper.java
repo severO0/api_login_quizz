@@ -23,8 +23,8 @@ public class UserMapper {
             .email(requestDto.email())
             .telefone(requestDto.telefone())
             .registroAcademico(requestDto.registroAcademico())
-            .senha(requestDto.senha())  // Senha será criptografada antes de salvar
-            .ativo(true)  // Definir como ativo por padrão
+            .senha(requestDto.senha())  
+            .ativo(true) 
             .build();
     }
 }
