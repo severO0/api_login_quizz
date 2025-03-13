@@ -48,8 +48,13 @@
         </dependency>
         <!-- Dependência para Spring Security -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+             <artifactId>jjwt</artifactId>
+            <version>0.12.6</version>
         </dependency>
     </dependencies>
     <build>

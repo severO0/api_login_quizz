@@ -1,11 +1,17 @@
 package testedeapi.com.service;
 import java.util.List;
-import java.util.Optional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import testedeapi.com.repository.UserRepository;
-import testedeapi.com.dto.UserDto;
+import testedeapi.com.dto.UserUpdateDto;
+import testedeapi.com.dto.UserRequestDto;
+import testedeapi.com.dto.UserResponseDto;
+import testedeapi.com.exception.UserException;
+import testedeapi.com.mapper.UserMapper;
+import testedeapi.com.models.Role;
 import testedeapi.com.models.UserModel;
 
 @Service
@@ -13,62 +19,66 @@ import testedeapi.com.models.UserModel;
 public class UserService {
 
     private final UserRepository userRepo;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Optional<UserDto> updateUser(Long id, UserDto userDto) {
-        return userRepo.findById(id).map(user -> {
-            user.setNome(userDto.nome());
-            user.setEmail(userDto.email());
-            user.setTelefone(userDto.telefone());
-            user.setAtivo(userDto.ativo());
-            UserModel updatedUser = userRepo.save(user);
-            return ConvertToDto(updatedUser);
-        });
-    }
-    @Transactional(readOnly = true)
-    public List<UserModel> getAllUser() {
-        return userRepo.findAll();
+    public UserResponseDto updateUser(Long id, UserUpdateDto userUpdateDto) {
+        UserModel user = userRepo.findById(id)
+                .orElseThrow(() -> new UserException("Usuário não encontrado"));
+
+        user.setNome(userUpdateDto.nome());
+        user.setTelefone(userUpdateDto.telefone());
+        user.setAtivo(userUpdateDto.ativo());
+
+        UserModel updatedUser = userRepo.save(user);
+        return UserMapper.toResponseDto(updatedUser);
     }
 
     @Transactional(readOnly = true)
-    public Optional<UserModel> getById(Long id) {
-        return userRepo.findById(id);
+    public List<UserResponseDto> getAllUser() {
+        return userRepo.findAll().stream()
+                .map(UserMapper::toResponseDto)
+                .toList();
     }
 
     @Transactional(readOnly = true)
-    public Optional<UserModel> getByRegistroAcademico(String registroAcademico) {
-        return userRepo.findByRegistroAcademico(registroAcademico);
+    public UserResponseDto getById(Long id) {
+        return userRepo.findById(id)
+                .map(UserMapper::toResponseDto)
+                .orElseThrow(() -> new UserException("Usuário não encontrado"));
     }
 
     @Transactional
-    public UserDto createUser(UserModel userModel) {
-        if (userRepo.existsByEmail(userModel.getEmail())) {
-            throw new IllegalArgumentException("Email já cadastrado");
+    public UserResponseDto createUser(UserRequestDto userRequestDto) {
+        validarUsuarioExistente(userRequestDto.email(), userRequestDto.registroAcademico());
+        if (userRepo.existsByEmail(userRequestDto.email())) {
+            throw new UserException("Email já cadastrado");
         }
-        if (userRepo.existsByRegistroAcademico(userModel.getRegistroAcademico())) {
-            throw new IllegalArgumentException("Registro acadêmico já cadastrado");
+        if (userRepo.existsByRegistroAcademico(userRequestDto.registroAcademico())) {
+            throw new UserException("Registro acadêmico já cadastrado");
         }
-        userModel.setSenha(userModel.getSenha()); 
-        UserModel savedUser = userRepo.save(userModel);
-        return ConvertToDto(savedUser);
-        
+
+        UserModel user = UserMapper.toEntity(userRequestDto);
+        user.setSenha(passwordEncoder.encode(userRequestDto.senha()));
+        user.setRole(Role.USER);
+        UserModel savedUser = userRepo.save(user);
+        return UserMapper.toResponseDto(savedUser);
     }
     
+    private void validarUsuarioExistente(String email, String registroAcademico) {
+        if (userRepo.existsByEmail(email)){
+            throw new UserException("Email já existente");
+        }
+        if (userRepo.existsByRegistroAcademico(registroAcademico)) {
+            throw new UserException("Registro Acadêmico já existente");
+        }
+    }
 
     @Transactional
     public void deleteUser(Long id) {
+        if (!userRepo.existsById(id)) {
+            throw new UserException("Usuário não encontrado");
+        }
         userRepo.deleteById(id);
     }
-
-    private UserDto ConvertToDto(UserModel user) {
-        return new UserDto(
-            user.getNome(),
-            user.getEmail(),
-            user.getRegistroAcademico(),
-            user.getTelefone(),
-            user.getAtivo()
-        );
-
-  
-}
 }
