@@ -61,6 +61,6 @@ public class JwtService {
     }
 
     public Authentication getAuthentication(String token, UserDetails userDetails) {
-        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import testedeapi.com.dto.UserUpdateDto;
+import testedeapi.com.exception.UserException;
 import testedeapi.com.dto.UserRequestDto;
 import testedeapi.com.dto.UserResponseDto;
 import testedeapi.com.service.UserService;
@@ -32,9 +33,13 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDto> createUser(@RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<?> createUser(@RequestBody UserRequestDto userRequestDto) {
+        try {
         UserResponseDto createdUser = service.createUser(userRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+        } catch (UserException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
