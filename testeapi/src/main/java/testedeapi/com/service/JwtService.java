@@ -1,11 +1,9 @@
 package testedeapi.com.service;
-
 import java.util.Date;
 import java.util.function.Function;
-
 import javax.crypto.SecretKey;
-
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -20,6 +18,9 @@ public class JwtService {
 
     @Value("${security.jwt.secret}")
     private String secretKey;
+
+    @Value("${security.jwt.expiration}") 
+    private long expirationMs;
 
     private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
@@ -36,15 +37,20 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(getSigningKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        try {
+            return Jwts.parser()
+                    .verifyWith(getSigningKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (JwtException e) {
+            throw new RuntimeException("Token inválido ou expirado", e);
+        }
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        return extractUsername(token).equals(userDetails.getUsername()) && !isTokenExpired(token);
+        String username = extractUsername(token);
+        return username != null && username.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {
@@ -52,12 +58,19 @@ public class JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
-        return Jwts.builder()
-                .subject(userDetails.getUsername())
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) 
-                .signWith(getSigningKey())
-                .compact();
+        try {
+            Date now = new Date();
+            Date expirationTime = new Date(now.getTime() + expirationMs);
+
+            return Jwts.builder()
+                    .subject(userDetails.getUsername()) 
+                    .issuedAt(now) // ✅ Agora usa Date corretamente
+                    .expiration(expirationTime) // ✅ Agora usa Date corretamente
+                    .signWith(getSigningKey()) 
+                    .compact();
+        } catch (JwtException e) {
+            throw new RuntimeException("Erro ao gerar token", e);
+        }
     }
 
     public Authentication getAuthentication(String token, UserDetails userDetails) {

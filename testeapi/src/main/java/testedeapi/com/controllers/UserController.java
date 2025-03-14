@@ -21,18 +21,18 @@ import testedeapi.com.service.UserService;
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api")
 public class UserController {
 
 
     private final UserService service;
 
-    @GetMapping
+    @GetMapping("/users")
     public ResponseEntity<List<UserResponseDto>>getAllUsers() {
        return ResponseEntity.ok(service.getAllUser());
     }
 
-    @PostMapping("/register")
+    @PostMapping("auth/register")
     public ResponseEntity<?> createUser(@RequestBody UserRequestDto userRequestDto) {
         try {
         UserResponseDto createdUser = service.createUser(userRequestDto);
@@ -42,7 +42,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/users/update/{id}")
     public ResponseEntity<UserResponseDto> updatedUser(@PathVariable Long id, 
                                                        @RequestBody UserUpdateDto userUpdateDto) {
         UserResponseDto updatedUser = service.updateUser(id, userUpdateDto);
@@ -50,7 +50,7 @@ public class UserController {
     }
     
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/users/delete/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         service.deleteUser(id);
         return ResponseEntity.noContent().build();
