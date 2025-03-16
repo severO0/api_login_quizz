@@ -6,11 +6,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import testedeapi.com.service.AuthorizationService;
 import testedeapi.com.service.JwtService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -20,7 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
+    private final AuthorizationService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -58,9 +58,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
    
     private boolean isPublicRoute(HttpServletRequest request) {
         String requestURI = request.getRequestURI();
-        return requestURI.startsWith("/api/auth") || requestURI.equals("/api/auth/register");
+        String method = request.getMethod();
+        
+        if (requestURI.equals("/api/auth/register") && method.equals("POST")) {
+            return true;
+        }
+        return requestURI.startsWith("/api/auth/");
     }
-
     
     private String recoverToken(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");

@@ -20,7 +20,7 @@ import testedeapi.com.service.JwtService;
 public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-    private final UserDetailsService userDetailsService; // 🔹 Adicionado para carregar o usuário autenticado
+    private final UserDetailsService userDetailsService;
 
     public AuthController(AuthenticationManager authenticationManager, JwtService jwtService, UserDetailsService userDetailsService) {
         this.authenticationManager = authenticationManager;
@@ -38,10 +38,8 @@ public class AuthController {
             return ResponseEntity.status(401).body(new AuthResponseDto("Erro: Autenticação falhou", null));
         }
 
-        // 🔹 Buscar o usuário autenticado no banco
         UserDetails userDetails = userDetailsService.loadUserByUsername(loginDto.registroAcademico());
 
-        // 🔹 Gerar o token passando o UserDetails correto
         String token = jwtService.generateToken(userDetails);
 
         return ResponseEntity.ok(new AuthResponseDto("Autenticação bem-sucedida", token));

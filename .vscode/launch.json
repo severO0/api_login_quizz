@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-TesteapiApplication<testeapi>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "testedeapi.com.testeapi.TesteapiApplication",
+            "projectName": "testeapi",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

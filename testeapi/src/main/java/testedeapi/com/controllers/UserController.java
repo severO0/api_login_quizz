@@ -32,7 +32,7 @@ public class UserController {
        return ResponseEntity.ok(service.getAllUser());
     }
 
-    @PostMapping("auth/register")
+    @PostMapping("/auth/register")
     public ResponseEntity<?> createUser(@RequestBody UserRequestDto userRequestDto) {
         try {
         UserResponseDto createdUser = service.createUser(userRequestDto);

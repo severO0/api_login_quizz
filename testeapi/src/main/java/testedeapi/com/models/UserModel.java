@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="usuarios")
-public class UserModel implements UserDetails { // <== CORREÇÃO AQUI
+public class UserModel implements UserDetails { 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -66,7 +66,7 @@ public class UserModel implements UserDetails { // <== CORREÇÃO AQUI
 
     @Override
     public String getUsername() {
-        return email;
+        return registroAcademico;
     }
 
     @Override

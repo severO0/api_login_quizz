@@ -1,20 +1,22 @@
 package testedeapi.com.service;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
 import testedeapi.com.repository.UserRepository;
 
+@RequiredArgsConstructor
+@Service
 public class AuthorizationService implements UserDetailsService {
 
-    @Autowired
-    UserRepository userRepo;
-
+    private final UserRepository userRepository;
+  
+    
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepo.findByLogin(username);
+        return userRepository.findByRegistroAcademico(username);
     }
     
 }
