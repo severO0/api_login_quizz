@@ -2,6 +2,7 @@ package testedeapi.com.controllers;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,11 +29,13 @@ public class UserController {
     private final UserService service;
 
     @GetMapping("/users")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<List<UserResponseDto>>getAllUsers() {
        return ResponseEntity.ok(service.getAllUser());
     }
 
     @PostMapping("/auth/register")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<?> createUser(@RequestBody UserRequestDto userRequestDto) {
         try {
         UserResponseDto createdUser = service.createUser(userRequestDto);
@@ -43,6 +46,7 @@ public class UserController {
     }
 
     @PutMapping("/users/update/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<UserResponseDto> updatedUser(@PathVariable Long id, 
                                                        @RequestBody UserUpdateDto userUpdateDto) {
         UserResponseDto updatedUser = service.updateUser(id, userUpdateDto);
@@ -51,6 +55,7 @@ public class UserController {
     
 
     @DeleteMapping("/users/delete/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         service.deleteUser(id);
         return ResponseEntity.noContent().build();

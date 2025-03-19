@@ -1,5 +1,5 @@
 package testedeapi.com.controllers;
-
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import testedeapi.com.dto.UserLoginDto;
 import testedeapi.com.dto.AuthResponseDto;
 import testedeapi.com.service.JwtService;
@@ -37,11 +36,14 @@ public class AuthController {
         if (!authentication.isAuthenticated()) {
             return ResponseEntity.status(401).body(new AuthResponseDto("Erro: Autenticação falhou", null));
         }
-
+        
         UserDetails userDetails = userDetailsService.loadUserByUsername(loginDto.registroAcademico());
-
         String token = jwtService.generateToken(userDetails);
-
-        return ResponseEntity.ok(new AuthResponseDto("Autenticação bem-sucedida", token));
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        return ResponseEntity.ok()
+            .headers(headers)
+            .body(new AuthResponseDto("Autenticação bem-sucedida", token));
+        
     }
 }

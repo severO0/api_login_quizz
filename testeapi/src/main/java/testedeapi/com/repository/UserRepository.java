@@ -6,7 +6,7 @@ import testedeapi.com.models.*;
 
 public interface UserRepository extends JpaRepository<UserModel, Long> {
     Optional<UserModel> findByEmail(String email);
-    UserDetails findByRegistroAcademico(String registroAcademicoString);
+    UserDetails findByRegistroAcademico(String registroAcademico);
     boolean existsByEmail(String email); 
     boolean existsByRegistroAcademico(String registroAcademico);
     
