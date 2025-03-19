@@ -64,8 +64,8 @@ public class JwtService {
 
             return Jwts.builder()
                     .subject(userDetails.getUsername()) 
-                    .issuedAt(now) // ✅ Agora usa Date corretamente
-                    .expiration(expirationTime) // ✅ Agora usa Date corretamente
+                    .issuedAt(now) 
+                    .expiration(expirationTime) 
                     .signWith(getSigningKey()) 
                     .compact();
         } catch (JwtException e) {

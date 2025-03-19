@@ -6,11 +6,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import testedeapi.com.service.AuthorizationService;
 import testedeapi.com.service.JwtService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -20,7 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
+    private final AuthorizationService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -33,16 +33,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
 
-        // Recupera o token do cabeçalho Authorization
         String token = recoverToken(request);
         if (token == null) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String username = jwtService.extractUsername(token);
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        String registroAcademico = jwtService.extractUsername(token);
+        if (registroAcademico != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(registroAcademico);
 
             if (jwtService.isTokenValid(token, userDetails)) {
                 Authentication authentication = new UsernamePasswordAuthenticationToken(
@@ -58,9 +57,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
    
     private boolean isPublicRoute(HttpServletRequest request) {
         String requestURI = request.getRequestURI();
-        return requestURI.startsWith("/api/auth") || requestURI.equals("/api/auth/register");
+        String method = request.getMethod();
+        
+        if (requestURI.equals("/api/auth/register") && method.equals("POST")) {
+            return true;
+        }
+        return requestURI.startsWith("/api/auth/");
     }
-
     
     private String recoverToken(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
