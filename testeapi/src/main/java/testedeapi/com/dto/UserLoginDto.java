@@ -5,6 +5,4 @@ public record UserLoginDto(
     String registroAcademico, 
     String password,
     Role role
-    ) {
-    
-}
+    ) {}
