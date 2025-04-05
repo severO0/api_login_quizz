@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registro de Professor</title>
+    <link rel="stylesheet" href="../css/registro.css" />
+  </head>
+  <body>
+    <div class="registro-container">
+     
+      <a href="/html/login.html" class="btn-voltar" title="Voltar para o login"
+        >&#8592;</a
+      >
+
+      <h2>Registro de Professor</h2>
+      <form id="registro-form">
+        <div class="form-group">
+          <label for="nome">Nome Completo</label>
+          <input
+            type="text"
+            id="nome"
+            name="nome"
+            placeholder="Digite seu nome completo"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Digite seu e-mail"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="contato">Contato (Telefone)</label>
+          <input
+            type="text"
+            id="contato"
+            name="contato"
+            placeholder="Digite seu telefone"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="senha">Senha</label>
+          <input
+            type="password"
+            id="senha"
+            name="senha"
+            placeholder="Crie uma senha"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="senha2">Repita sua Senha</label>
+          <input
+            type="password"
+            id="senha2"
+            name="senha2"
+            placeholder="Repita a senha"
+            required
+          />
+          <small id="senha-aviso" style="color: red; display: none"
+            >As senhas não coincidem!</small
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="ra">RA (Registro Acadêmico)</label>
+          <input
+            type="text"
+            id="ra"
+            name="ra"
+            placeholder="Digite seu RA"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn-registrar">Cadastrar</button>
+      </form>
+    </div>
+    <div class="logo-container">
+      <img src="../imagens/unisales logo.png" alt="Logo Unisales" />
+    </div>
+  </div>
+
+  <div class="link-unisales">
+    <a href="https://unisales.br" target="_blank">unisales.br</a>
+  </div>
+    <script src="../js/registro.js"></script>
+  </body>
+</html>

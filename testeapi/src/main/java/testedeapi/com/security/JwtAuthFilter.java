@@ -58,7 +58,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private boolean isPublicRoute(HttpServletRequest request) {
         String requestURI = request.getRequestURI();
         String method = request.getMethod();
-        
+        if (requestURI.startsWith("/html") || requestURI.startsWith("/css") || requestURI.startsWith("/js") || requestURI.startsWith("/imagens")) {
+            return true;
+        }
         if (requestURI.equals("/api/auth/register") && method.equals("POST")) {
             return true;
         }

@@ -1,0 +1,174 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #4e9ff0;
+  height: 100vh;
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  position: relative;
+  padding: 20px;
+  overflow: hidden;
+}
+
+
+.registro-container {
+  background-color: white;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  position: relative; 
+  margin-left: 30px; 
+}
+h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.btn-registrar {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.btn-registrar:hover {
+  background-color: #0056b3;
+}
+
+small {
+  display: block;
+  margin-top: 5px;
+}
+
+/* Seta de voltar dentro do card */
+.btn-voltar {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  font-size: 22px;
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.3s, font-size 0.3s;
+}
+
+.btn-voltar:hover {
+  color: #0056b3;
+  font-size: 26px;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Logo grande fixa à direita */
+.logo-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 200px; /* Afasta da borda direita */
+}
+
+.logo-container img {
+  max-height: 80%; /* Mantém a imagem grande */
+  width: auto;
+  object-fit: contain;
+}
+
+/* Link unisales.br */
+.link-unisales {
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  text-align: center;
+}
+
+.link-unisales a {
+  color: white;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+@media (max-width: 1100px) {
+  body {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+  }
+
+  .logo-container {
+    margin: 0;
+    height: auto;
+  }
+
+  .logo-container img {
+    max-height: 200px;
+    margin-top: 20px;
+  }
+
+  .registro-container {
+    margin-left: 0;
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 500px) {
+  .registro-container {
+    padding: 20px;
+  }
+
+  .btn-voltar {
+    font-size: 20px;
+  }
+
+  .link-unisales a {
+    font-size: 16px;
+  }
+
+  .logo-container img {
+    max-height: 150px;
+  }
+}
